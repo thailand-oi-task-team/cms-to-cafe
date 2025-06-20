@@ -40,8 +40,26 @@ class CMS_Dump:
     
     return testcase_ids
   
-  def get_file_path(self, testcase_id):
+  def get_test_file(self, testcase_id):
     input_file = self.data[testcase_id]["input"]
     output_file = self.data[testcase_id]["output"]
     
     return input_file, output_file
+  
+  def get_manager_file_ids(self, active_dataset_id):
+    if self.data[active_dataset_id]["managers"] == {}:
+      return []
+    
+    manager_file_ids = list()
+    for file_name in self.data[active_dataset_id]["managers"]:
+      manager_file_ids.append(self.data[active_dataset_id]["managers"][file_name])
+    
+    return manager_file_ids
+  
+  def get_file(self, file_id):
+    file_path = self.data[file_id]["digest"]
+    file_name = self.data[file_id]["filename"]
+    return file_path, file_name
+  
+  def get_groups(self, active_dataset_id):
+    return self.data[active_dataset_id]["score_type_parameters"]
