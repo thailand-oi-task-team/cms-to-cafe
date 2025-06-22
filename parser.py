@@ -44,15 +44,48 @@ def parse_task(task_id):
     if file_name == 'checker':
       os.system(f"mv contest_data/{task_name}/managers/{file_name} contest_data/{task_name}/checker/checker")
   
-  groups = cms_dump.get_groups(t)
+  groups = cms_dump.get_groups(active_dataset_id)
   
   # TODO: write config file
   with open(f"contest_data/{task_name}/config.yml", "w") as config_file:
     config_file.write("---\n")
+    config_file.write('testcases_pattern: "*"\n')
     config_file.write("testcases_dir: testcases\n")
     config_file.write("testcases:\n")
-    for i in range(1, test_index):
-      config_file.write(f"\t '{i}'" )
+    test_index = 1
+    group_num = 1
+    for group_val in groups:
+      score = group_val[0]
+      num_tests = group_val[1]
+      for i in range(num_tests):
+        config_file.write(f"  '{test_index}':\n")
+        
+        config_file.write(f"    group: {group_num}\n")
+        config_file.write(f"    group_name: '{test_index}'\n")
+        config_file.write(f"    weight: 1\n")
+        
+        test_index += 1
+      group_num += 1
+    
+    task_title = cms_dump.get_task_title(task_id)
+    task
+    
+    config_file.write("checker: checker\n")
+    config_file.write("checker_dir: checker\n")
+    config_file.write("name: {task_name}\n")
+    config_file.write("full_name: {task_title}\n")
+    config_file.wrtie("task_type: batch\n")
+    config_file.write("compilation_type: with_managers\n")
+    config_file.write("time_limit: 1.0")
+    config_file.write("memory_limit: 512")
+    config_file.write("score_type: group_min")
+    config_file.write("evaluation_type: custom_cafe")
+    config_file.write("ds_name: Dataset 1")
+    config_file.write("managers_dir: managers")
+    config_file.write("solutions_dir: model_solutions")
+    config_file.write("initializers_dir: initializers")
+        
+      
 
 def main():
   parser = argparse.ArgumentParser(description="Parse CMS contest data.")
