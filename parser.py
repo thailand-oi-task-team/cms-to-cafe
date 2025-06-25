@@ -35,6 +35,7 @@ def parse_task(task_id):
     
     test_index += 1
   
+  found_checker = False
   manager_file_ids = cms_dump.get_manager_file_ids(active_dataset_id)
   for file_id in manager_file_ids:
     file_path, file_name = cms_dump.get_file(file_id)
@@ -42,11 +43,21 @@ def parse_task(task_id):
     os.system(f"cp {os.path.join(file_dir, 'files', file_path)} contest_data/{task_name}/managers/{file_name}")
     
     if file_name == 'checker':
+      found_checker = True
       os.system(f"mv contest_data/{task_name}/managers/{file_name} contest_data/{task_name}/checker/checker")
   
   groups = cms_dump.get_groups(active_dataset_id)
   
-  # TODO: write config file
+  attachment_file_ids = cms_dump.get_attachment_file_ids(task_id)
+  for file_id in attachment_file_ids:
+    file_path, file_name = cms_dump.get_file(file_id)
+    
+    os.system(f"cp {os.path.join(file_dir, 'files', file_path)} contest_data/{task_name}/attachment/{file_name}")
+  
+  statement_id = cms_dump.get_task_statement_id(task_id)
+  statement = cms_dump.get_statement(statement_id)
+  os.system(f"cp {os.path.join(file_dir, 'files', statement)} contest_data/{task_name}/statement.pdf")
+  
   with open(f"contest_data/{task_name}/config.yml", "w") as config_file:
     config_file.write("---\n")
     config_file.write('testcases_pattern: "*"\n')
@@ -68,22 +79,23 @@ def parse_task(task_id):
       group_num += 1
     
     task_title = cms_dump.get_task_title(task_id)
-    task
+    time_limit, memory_limit = cms_dump.get_task_limits(active_dataset_id)
     
-    config_file.write("checker: checker\n")
-    config_file.write("checker_dir: checker\n")
-    config_file.write("name: {task_name}\n")
-    config_file.write("full_name: {task_title}\n")
-    config_file.wrtie("task_type: batch\n")
+    if found_checker:
+      config_file.write("checker: checker\n")
+      config_file.write("checker_dir: checker\n")
+    config_file.write(f"name: {task_name}\n")
+    config_file.write(f"full_name: {task_title}\n")
+    config_file.write("task_type: batch\n")
     config_file.write("compilation_type: with_managers\n")
-    config_file.write("time_limit: 1.0")
-    config_file.write("memory_limit: 512")
-    config_file.write("score_type: group_min")
-    config_file.write("evaluation_type: custom_cafe")
-    config_file.write("ds_name: Dataset 1")
-    config_file.write("managers_dir: managers")
-    config_file.write("solutions_dir: model_solutions")
-    config_file.write("initializers_dir: initializers")
+    config_file.write(f"time_limit: {time_limit}\n")
+    config_file.write(f"memory_limit: {memory_limit}\n")
+    config_file.write("score_type: group_min\n")
+    config_file.write("evaluation_type: custom_cafe\n")
+    config_file.write("ds_name: Dataset 1\n")
+    config_file.write("managers_dir: managers\n")
+    config_file.write("solutions_dir: model_solutions\n")
+    config_file.write("initializers_dir: initializers\n")
         
       
 

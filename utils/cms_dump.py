@@ -67,3 +67,30 @@ class CMS_Dump:
     if self.data[active_dataset_id]["score_type"] == "GroupMinPreReq":
       return self.data[active_dataset_id]["score_type_parameters"][1:]
     raise ValueError("Unsupported score type. Only GroupMin and GroupMinPreReq are supported.")
+
+  def get_task_title(self, task_id):
+    return self.data[task_id]["title"]
+  
+  def get_task_limits(self, active_dataset_id):
+    time_limit = self.data[active_dataset_id]["time_limit"]
+    memory_limit = self.data[active_dataset_id]["memory_limit"]
+    memory_limit = int(memory_limit) // 1024 // 1024
+    return time_limit, memory_limit
+
+  def get_attachment_file_ids(self, task_id):
+    if "attachments" not in self.data[task_id]:
+      return []
+    
+    attachment_file_ids = list()
+    for file_name in self.data[task_id]["attachments"]:
+      attachment_file_ids.append(self.data[task_id]["attachments"][file_name])
+    
+    return attachment_file_ids
+  
+  def get_task_statement_id(self, task_id):
+    primary_statement_name = self.data[task_id]["primary_statements"][0]
+    primary_statment_id = self.data[task_id]["statements"][primary_statement_name]
+    return primary_statment_id
+  
+  def get_statement(self, statement_id):
+    return self.data[statement_id]["digest"]
