@@ -8,15 +8,18 @@ from utils.cms_dump import CMS_Dump
 
 cms_dump = None
 file_dir = None
+only_parse_task = None
 
 def parse_task(task_id):
   global cms_dump
+  global only_parse_task
   
   task_name = cms_dump.get_task_name(task_id)
   active_dataset_id = cms_dump.get_active_dataset_id(task_id)
   
-  if task_name != 'd1_dining_car':
-    return 
+  if only_parse_task is not None and only_parse_task != task_name:
+    print(f"Skipping task {task_name} as it is not in the specified tasks to parse.")
+    return
   
   os.mkdir(f"contest_data/{task_name}")
   os.mkdir(f"contest_data/{task_name}/attachment")
@@ -102,13 +105,16 @@ def parse_task(task_id):
 def main():
   parser = argparse.ArgumentParser(description="Parse CMS contest data.")
   parser.add_argument("--dir", type=str, help="Path to the CMS contest directory", required=True)
+  parser.add_argument("--only", type=str, help="Only parse the specified task", default=None)
   args = parser.parse_args()
   
   global cms_dump
   global file_dir
+  global only_parse_task
   
   file_dir = args.dir
   cms_dump = CMS_Dump(os.path.join(file_dir, "contest.json"))
+  only_parse_task = args.only.strip() if args.only else None
 
   contest_ids = cms_dump.get_contest_ids()
   
