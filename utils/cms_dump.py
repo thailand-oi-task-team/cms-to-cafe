@@ -64,7 +64,7 @@ class CMS_Dump:
   def get_groups(self, active_dataset_id):
     if self.data[active_dataset_id]["score_type"] == "GroupMin":
       return self.data[active_dataset_id]["score_type_parameters"]
-    if self.data[active_dataset_id]["score_type"] == "GroupMinPreReq":
+    if self.data[active_dataset_id]["score_type"] == "GroupMinPrereq":
       return self.data[active_dataset_id]["score_type_parameters"][1:]
     raise ValueError("Unsupported score type. Only GroupMin and GroupMinPreReq are supported.")
 

@@ -94,11 +94,12 @@ def parse_task(task_id):
     config_file.write(f"time_limit: {time_limit}\n")
     config_file.write(f"memory_limit: {memory_limit}\n")
     config_file.write("score_type: group_min\n")
-    config_file.write("evaluation_type: custom_cafe\n")
+    config_file.write("evaluation_type: custom_cms\n")
     config_file.write("ds_name: Dataset 1\n")
     config_file.write("managers_dir: managers\n")
     config_file.write("solutions_dir: model_solutions\n")
     config_file.write("initializers_dir: initializers\n")
+    config_file.write("submission_filename: student.cpp\n")
         
       
 
