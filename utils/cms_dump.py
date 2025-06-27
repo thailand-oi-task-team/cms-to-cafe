@@ -74,7 +74,7 @@ class CMS_Dump:
   def get_task_limits(self, active_dataset_id):
     time_limit = self.data[active_dataset_id]["time_limit"]
     memory_limit = self.data[active_dataset_id]["memory_limit"]
-    memory_limit = int(memory_limit) // 1024 // 1024
+    memory_limit = int(memory_limit)
     return time_limit, memory_limit
 
   def get_attachment_file_ids(self, task_id):
